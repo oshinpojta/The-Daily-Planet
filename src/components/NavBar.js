@@ -16,7 +16,10 @@ export default class NavBar extends Component {
 
   render() {
     const categories = this.props.categories;
-    const selectedCategory = this.props.selectedCategory;
+    const locationPath = window.location.href.split("/");
+    const location = locationPath[locationPath.length-1];
+    // console.log(locationPath, location)
+
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -26,11 +29,11 @@ export default class NavBar extends Component {
             </button>
             <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div className="navbar-nav">
-                <Link key={"nav_home"}  className="nav-item nav-link" to="/">Home</Link>
+                <Link key={"nav_home"}  className={`nav-item nav-link ${location == ""? "active" : "" }`} to="/">Home</Link>
                 {/* <Link key={"about"} className="nav-item nav-link" to="/about">About</Link> */}
                 {categories.map((category) =>{
                   let link = `/${category.toLowerCase()}`;
-                  return <Link key={"nav_"+category}  className="nav-item nav-link" to={link}>{category}</Link>
+                  return <Link key={"nav_"+category}  className={`nav-item nav-link ${location.toLowerCase() == category.toLowerCase()? "active" : "" }`}  to={link}>{category}</Link>
                 })}
                 </div>
             </div>
@@ -38,6 +41,14 @@ export default class NavBar extends Component {
       </div>
     )
   }
+}
+
+const UseLocation = () => {
+  return (
+    <div>
+      
+    </div>
+  )
 }
 
 

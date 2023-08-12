@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react'
+import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import axios from 'axios';
 import Spinner from './Spinner';
@@ -37,7 +37,7 @@ export default class News extends Component {
     async componentDidMount(){
         try {
             const setProgress = this.props.setProgress;
-            console.log(setProgress, this.props)
+            // console.log(setProgress, this.props)
             setProgress(10);
             const pageSize = this.props.pageSize;
             const url = `https://newsapi.org/v2/everything?q=${this.props.category.toLowerCase()}&apiKey=${apiKey}&page=${this.state.page}&pageSize=${pageSize}`;

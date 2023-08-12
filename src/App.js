@@ -22,7 +22,7 @@ export default class App extends Component {
   }
 
   setProgress = (value) => {
-    console.log("val ", value)
+    // console.log("val ", value)
     if(!value){
       value = 0;
     }
