@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
+import LogoComponent from './LogoComponent';
 
 export default class NavBar extends Component {
 
@@ -23,6 +24,7 @@ export default class NavBar extends Component {
     return (
       <div>
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+            <LogoComponent /> 
             <Link key={"news-guide"} className="navbar-brand" to="/"  style={{marginLeft:"2rem"}}>The Daily Planet</Link>
             <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
