@@ -6,8 +6,12 @@ import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroll-component';
 // import news from '../data/news'
 
-const apiKey = "5f185344340640a2b4e029bfdb3a60d7";
-// const apiKey = "69cc7b23df6a49f5be39f955e795301d";
+const apiKey = "wjnqjtoyOiRP1OJZD6jkyVS6wNtxP6k3pNhMDvKvDxw" //NewsCatcher
+// const apiKey = "5f185344340640a2b4e029bfdb3a60d7"; //NewsApi
+// const apiKey = "69cc7b23df6a49f5be39f955e795301d"; //NewsApi
+const headers = {
+  "x-api-key" : apiKey
+}
 
 export default class News extends Component {
     
@@ -40,15 +44,16 @@ export default class News extends Component {
             // console.log(setProgress, this.props)
             setProgress(10);
             const pageSize = this.props.pageSize;
-            const url = `https://newsapi.org/v2/everything?q=${this.props.category.toLowerCase()}&apiKey=${apiKey}&page=${this.state.page}&pageSize=${pageSize}`;
-            let response = await axios.get(url);
+            // const url = `https://newsapi.org/v2/everything?q=${this.props.category.toLowerCase()}&apiKey=${apiKey}&page=${this.state.page}&pageSize=${pageSize}`;
+            const url = `https://api.newscatcherapi.com/v2/search?q=${this.props.category.toLowerCase()}&countries=US&page_size=${pageSize}&page=${this.state.page}`
+            let response = await axios.get( url, { headers : headers });
             // console.log("News : ", url, response)
             if(response && response.data && response.data.articles){
               this.setState({ 
                 ...this.state, 
                 articles : response.data.articles,
                 loading : false,
-                totalResults : response.data.totalResults,
+                totalResults : response.data.total_pages, // response.data.totalResults,
                 category : this.props.category
               })
               setProgress(100);
@@ -63,51 +68,51 @@ export default class News extends Component {
     handleClick =  async (e) => {
       try {
         // console.log("Clicked", e.target.id, e.target.parentNode.id);
-        if(e.target.id == "button-prev" || e.target.parentNode.id == "button-prev"){
-          window.scrollTo(0,0);
-          this.setState({ 
-            ...this.state, 
-            loading : true
-          })
-          const pageSize = this.props.pageSize;
-          const page = this.state.page <= 1 ? 1 : this.state.page-1; 
-          const url = `https://newsapi.org/v2/everything?q=${this.state.category.toLowerCase()}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
-          let response = await axios.get(url);
-          //console.log("News : ", response);
-          if(response && response.data && response.data.articles){
-            this.setState({ 
-              ...this.state, 
-              articles : response.data.articles,
-              totalResults : response.data.totalResults,
-              loading : false,
-              page : page
-            })
-          }
+        // if(e.target.id == "button-prev" || e.target.parentNode.id == "button-prev"){
+        //   window.scrollTo(0,0);
+        //   this.setState({ 
+        //     ...this.state, 
+        //     loading : true
+        //   })
+        //   const pageSize = this.props.pageSize;
+        //   const page = this.state.page <= 1 ? 1 : this.state.page-1; 
+        //   const url = `https://newsapi.org/v2/everything?q=${this.state.category.toLowerCase()}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
+        //   let response = await axios.get(url);
+        //   //console.log("News : ", response);
+        //   if(response && response.data && response.data.articles){
+        //     this.setState({ 
+        //       ...this.state, 
+        //       articles : response.data.articles,
+        //       totalResults : response.data.totalResults,
+        //       loading : false,
+        //       page : page
+        //     })
+        //   }
   
-          //console.log("prev", url);
-        }
-        if(e.target.id == "button-next" || e.target.parentNode.id == "button-next"){
-          window.scrollTo(0,0);
-          this.setState({ 
-            ...this.state, 
-            loading : true
-          })
-          const pageSize = this.props.pageSize;
-          const page = this.state.page+1; 
-          const url = `https://newsapi.org/v2/everything?q=${this.state.category.toLowerCase()}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
-          let response = await axios.get(url);
-          //console.log("News : ", response)
-          if(response && response.data && response.data.articles){
-            this.setState({ 
-              ...this.state, 
-              articles : response.data.articles,
-              totalResults : response.data.totalResults,
-              loading : false,
-              page : page
-            })
-          }
-          //console.log("next", url);
-        } 
+        //   //console.log("prev", url);
+        // }
+        // if(e.target.id == "button-next" || e.target.parentNode.id == "button-next"){
+        //   window.scrollTo(0,0);
+        //   this.setState({ 
+        //     ...this.state, 
+        //     loading : true
+        //   })
+        //   const pageSize = this.props.pageSize;
+        //   const page = this.state.page+1; 
+        //   const url = `https://newsapi.org/v2/everything?q=${this.state.category.toLowerCase()}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
+        //   let response = await axios.get(url);
+        //   //console.log("News : ", response)
+        //   if(response && response.data && response.data.articles){
+        //     this.setState({ 
+        //       ...this.state, 
+        //       articles : response.data.articles,
+        //       totalResults : response.data.totalResults,
+        //       loading : false,
+        //       page : page
+        //     })
+        //   }
+        //   //console.log("next", url);
+        // } 
         if(e.target.id == "button-scroll-top" || e.target.parentNode.id == "button-scroll-top" || e.target.parentNode.parentNode.id == "button-scroll-top"){
           window.scrollTo(0,0);
         } 
@@ -121,14 +126,15 @@ export default class News extends Component {
           setProgress(10);
           const pageSize = this.props.pageSize;
           const page = this.state.page+1; 
-          const url = `https://newsapi.org/v2/everything?q=${this.state.category.toLowerCase()}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
-          let response = await axios.get(url);
+          // const url = `https://newsapi.org/v2/everything?q=${this.state.category.toLowerCase()}&apiKey=${apiKey}&page=${page}&pageSize=${pageSize}`
+          const url = `https://api.newscatcherapi.com/v2/search?q=${this.props.category.toLowerCase()}&countries=US&page_size=${pageSize}&page=${this.state.page}`
+          let response = await axios.get(url, { headers : headers });
           //console.log("News : ", response)
           if(response && response.data && response.data.articles){
             this.setState({ 
               ...this.state, 
               articles : [...this.state.articles,  ...response.data.articles],
-              totalResults : response.data.totalResults,
+              totalResults : response.data.total_pages, // response.data.totalResults,
               loading : false,
               page : page
             })
@@ -161,12 +167,12 @@ export default class News extends Component {
     // console.log(news)
     let data = this.state.articles;
     let id = 1;
-    const pageSize = this.props.pageSize;
+    // const pageSize = this.props.pageSize;
     // console.log("hasMore", this.state)
     
     return (
       <>
-      <h1 className='text-center heading' style={{ marginTop:"2rem", marginLeft:"2rem"}}><u>Top Headlines {this.props.category!== "General" ? `( ${this.props.category} )` : ""}</u></h1>
+      <h1 className='text-center heading' style={{ marginTop:"5rem", marginLeft:"2rem"}}><u>Top Headlines {this.props.category!== "General" ? `( ${this.props.category} )` : ""}</u></h1>
       {this.state.loading && <Spinner />}
       { !this.state.loading && <div className='container-fluid news-container'>
         <div className="row">
