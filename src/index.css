@@ -11,6 +11,11 @@ html {
     font-family: 'Poppins', sans-serif;
 }
 
+.api-error {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+}
+
 .card-name{
     font-family: 'Righteous', cursive;
 }

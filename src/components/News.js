@@ -31,7 +31,7 @@ export default class News extends Component {
         //call state
         this.state = {
             articles : [],
-            loading : false,
+            loading : true,
             totalResults : 0,
             page : 1,
             category : "General"
@@ -47,7 +47,7 @@ export default class News extends Component {
             // const url = `https://newsapi.org/v2/everything?q=${this.props.category.toLowerCase()}&apiKey=${apiKey}&page=${this.state.page}&pageSize=${pageSize}`;
             const url = `https://api.newscatcherapi.com/v2/search?q=${this.props.category.toLowerCase()}&countries=US&page_size=${pageSize}&page=${this.state.page}`
             let response = await axios.get( url, { headers : headers });
-            // console.log("News : ", url, response)
+            console.log("News : ", url, response)
             if(response && response.data && response.data.articles){
               this.setState({ 
                 ...this.state, 
@@ -58,10 +58,22 @@ export default class News extends Component {
               })
               setProgress(100);
               
+            }else{
+              this.setState({ 
+                ...this.state, 
+                loading : false,
+              })
+              setProgress(100);
             }
             // console.log("Mount Comp ", this.state);
         } catch (error) {
-            console.log("Error : ", error)
+            const setProgress = this.props.setProgress;
+            console.log("Api Error : ", error);
+            this.setState({ 
+              ...this.state, 
+              loading : false,
+            })
+            setProgress(100);
         }  
     }
 
@@ -122,6 +134,7 @@ export default class News extends Component {
     }
 
     fetchData = async () => {
+      try {
           const setProgress = this.props.setProgress;
           setProgress(10);
           const pageSize = this.props.pageSize;
@@ -140,7 +153,22 @@ export default class News extends Component {
             })
             setProgress(100);
             // console.log("next", url, response);
+          }else{
+            this.setState({ 
+              ...this.state, 
+              loading : false,
+            })
+            setProgress(100);
           }
+        } catch (error) {
+            const setProgress = this.props.setProgress;
+            console.log("Api Error : ", error);
+            this.setState({ 
+              ...this.state, 
+              loading : false,
+            })
+            setProgress(100);
+        }
     }
     
     // refreshFunction = async () =>{
@@ -173,7 +201,7 @@ export default class News extends Component {
     return (
       <>
       <h1 className='text-center heading' style={{ marginTop:"5rem", marginLeft:"2rem"}}><u>Top Headlines {this.props.category!== "General" ? `( ${this.props.category} )` : ""}</u></h1>
-      {this.state.loading && <Spinner />}
+      { this.state.loading && <Spinner />}
       { !this.state.loading && <div className='container-fluid news-container'>
         <div className="row">
         <InfiniteScroll style={{ display: "flex", flexWrap: "wrap"}}
@@ -199,13 +227,14 @@ export default class News extends Component {
         </InfiniteScroll> 
         
         </div>
-
         {/* <div className="d-flex justify-content-between">
           <button disabled={this.state.page<=1} type="button" className="btn btn-light" id="button-prev" onClick={this.handleClick}><i className="bi bi-arrow-left"></i> Previous</button>
           <button id='button-scroll-top' style={{ borderRadius:"40%", width:"50px", height:"48px", backgroundColor:"#3d3d3d", color:"white", paddingTop:"4px"}}><h3><i className="bi bi-arrow-up" onClick={this.handleClick}></i></h3></button>
           <button disabled={this.state.articles.length/pageSize <1}  type="button" className="btn btn-dark"  id="button-next" onClick={this.handleClick}>Next <i className="bi bi-arrow-right"></i></button>
         </div>  */}
       </div>}
+      { ( !this.state.loading && this.state.articles.length<=0 ) && <h2 className='api-error'>API Query Limit Exhausted for this Month! Please Try Again Next Month!</h2>}
+
       </>
     )
   }
